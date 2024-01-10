@@ -48,7 +48,7 @@ function App() {
   }
 
   async function logOut() {
-    const res = await fetch('/logout', { credentials: 'include' });
+    const res = await fetch('/api/logout', { credentials: 'include' });
     console.log(res);
   }
 
