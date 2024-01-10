@@ -8,13 +8,49 @@ function App() {
   const [val, setVal] = useState('yo');
 
   useEffect(() => {
-    fetch('/api/todos')
+    //users
+    fetch('/api/users')
       .then((r) => r.json())
       .then((todos) => {
         console.log(todos);
         setVal(todos[0].content);
       });
+
+    //fetch count
+    fetch('/api/count')
+      .then((res) => res.json())
+      .then((count) => {
+        setCount(count.count);
+      });
   }, []);
+
+  async function formHandler(e) {
+    e.preventDefault();
+
+    const opts = {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(new FormData(e.target))),
+    };
+
+    const loggedInUser = await fetch('/api/login', opts).then((r) => r.json());
+    console.log(loggedInUser);
+
+    e.target.reset();
+  }
+
+  async function currentUser() {
+    const user = await fetch('/api/me', { credentials: 'include' }).then((r) =>
+      r.json()
+    );
+    console.log(user);
+  }
+
+  async function logOut() {
+    const res = await fetch('/logout', { credentials: 'include' });
+    console.log(res);
+  }
 
   return (
     <>
@@ -31,6 +67,21 @@ function App() {
         <p>{val}</p>
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
+        </button>
+        <form onSubmit={formHandler}>
+          <label htmlFor="name">Name:</label>
+          <input type="text" name="name" />
+          <label htmlFor="password">Password:</label>
+          <input type="password" name="password" />
+
+          <button>Log In</button>
+        </form>
+
+        <button id="log-out" onClick={logOut}>
+          Log Out
+        </button>
+        <button id="current" onClick={currentUser}>
+          Current User
         </button>
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
