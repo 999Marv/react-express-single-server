@@ -147,8 +147,6 @@ app.post('/api/login', async (req, res) => {
     }
   }
 
-  console.log(user);
-
   if (user) {
     res.cookie('userId', user.id, { maxAge: 1000 * 5 });
     res.send({ user });
