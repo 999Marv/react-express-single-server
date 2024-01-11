@@ -52,13 +52,29 @@ function App() {
     console.log(res);
   }
 
+  async function createHandler(e) {
+    e.preventDefault();
+
+    const opts = {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(new FormData(e.target))),
+    };
+
+    const loggedInUser = await fetch('/api/users', opts).then((r) => r.json());
+    console.log(loggedInUser);
+
+    e.target.reset();
+  }
+
   return (
     <>
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
+        <a href="https://react.dev" target="_blank" rel="noreferrer">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
@@ -68,6 +84,18 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
+
+        {/* create new user functionality */}
+        <form onSubmit={createHandler}>
+          <label htmlFor="name">Name:</label>
+          <input type="text" name="name" />
+          <label htmlFor="password">Password:</label>
+          <input type="password" name="password" />
+
+          <button>Create new users</button>
+        </form>
+
+        {/* log in functionality */}
         <form onSubmit={formHandler}>
           <label htmlFor="name">Name:</label>
           <input type="text" name="name" />
